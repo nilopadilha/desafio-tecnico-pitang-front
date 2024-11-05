@@ -1,0 +1,32 @@
+<h2>Lista de Usuários</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Nome</th>
+      <th>Sobrenome</th>
+      <th>Email</th>
+      <th>Aniversário</th>
+      <th>Login</th>
+      <th>Telefone</th>
+      <th>Papel</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let user of users">
+      <td>{{ user.id }}</td>
+      <td>{{ user.firstName }}</td>
+      <td>{{ user.lastName }}</td>
+      <td>{{ user.email }}</td>
+      <td>{{ user.birthday | date:'shortDate' }}</td>
+      <td>{{ user.login }}</td>
+      <td>{{ user.phone }}</td>
+      <td>{{ user.role }}</td>
+      <td>
+        <button (click)="deleteUser(user.id)">Deletar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+

@@ -1,0 +1,41 @@
+<h2>{{ isEditMode ? 'Edit User' : 'Create User' }}</h2>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+  <div>
+    <label for="firstName">First Name:</label>
+    <input id="firstName" formControlName="firstName" required>
+  </div>
+  <div>
+    <label for="lastName">Last Name:</label>
+    <input id="lastName" formControlName="lastName" required>
+  </div>
+  <div>
+    <label for="email">Email:</label>
+    <input id="email" formControlName="email" type="email" required>
+  </div>
+  <div>
+    <label for="birthday">Birthday:</label>
+    <input id="birthday" formControlName="birthday" type="date" required>
+  </div>
+  <div>
+    <label for="login">Login:</label>
+    <input id="login" formControlName="login" required>
+  </div>
+  <div>
+    <label for="password">Password:</label>
+    <input id="password" formControlName="password" type="password" required>
+  </div>
+  <div>
+    <label for="phone">Phone:</label>
+    <input id="phone" formControlName="phone">
+  </div>
+  <div>
+    <label for="role">Role:</label>
+    <select id="role" formControlName="role">
+      <option value="USER">User</option>
+      <option value="ADMIN">Admin</option>
+      <option value="GESTOR">Gestor</option>
+    </select>
+  </div>
+  <button type="submit" [disabled]="!userForm.valid">{{ isEditMode ? 'Update' : 'Create' }}</button>
+  <button type="button" (click)="cancel()">Cancel</button>
+</form>

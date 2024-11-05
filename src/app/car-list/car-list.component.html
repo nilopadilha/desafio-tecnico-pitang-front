@@ -1,0 +1,26 @@
+<h2>Lista de Carros</h2>
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Ano</th>
+      <th>Placa</th>
+      <th>Modelo</th>
+      <th>Cor</th>
+      <th>Ações</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let car of cars">
+      <td>{{ car.id }}</td>
+      <td>{{ car.car_year }}</td>
+      <td>{{ car.licensePlate }}</td>
+      <td>{{ car.model }}</td>
+      <td>{{ car.color }}</td>
+      <td>
+        <button (click)="deleteCar(car.id)">Deletar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
