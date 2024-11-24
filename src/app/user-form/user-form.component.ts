@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService,  } from '../servico/api.service';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
 import { UserRole } from '../models/UserRole';
@@ -9,76 +9,66 @@ import { UserRole } from '../models/UserRole';
 @Component({
   selector: 'app-user-form',
   standalone: true,
-  imports: [],
+  imports: [ReactiveFormsModule ],
   templateUrl: './user-form.component.html',
   styleUrl: './user-form.component.css'
 })
 export class UserFormComponent implements OnInit {
-[x: string]: any;
-  userForm: FormGroup;
-  isEditMode = false;
-  userId!: number;
+  users: User[] = [];
 
-  constructor(
-    private fb: FormBuilder,
-    private userService: ApiService,
-    private route: ActivatedRoute,
-    private router: Router
-  ) {
-    this.userForm = this.fb.group({
-      firstName: ['', Validators.required],
-      lastName: ['', Validators.required],
-      email: ['', [Validators.required, Validators.email]],
-      birthday: ['', Validators.required],
-      login: ['', Validators.required],
-      password: ['', Validators.required],
-      phone: [''],
-      role: [UserRole.USER, Validators.required]
+  constructor(private userService: ApiService) {}
+
+  ngOnInit() {
+    this.getUsers();
+  }
+
+  getUsers() {
+    this.userService.getUsers().subscribe((users) => (this.users = users));
+  }
+
+  createUser(user: User) {
+    this.userService.createUser(user).subscribe((newUser) => this.users.push(newUser));
+  }
+
+  updateUser(id: number, user: User) {
+    this.userService.updateUser(id, user).subscribe((updatedUser) => {
+      const index = this.users.findIndex((u) => u.id === id);
+      this.users[index] = updatedUser;
     });
   }
 
-  ngOnInit(): void {
-    this.route.params.subscribe(params => {
-      if (params['id']) {
-        this.isEditMode = true;
-        this.userId = +params['id'];
-        this.loadUser(this.userId);
-      }
+  deleteUser(id: number) {
+    this.userService.deleteUser(id).subscribe(() => {
+      this.users = this.users.filter((u) => u.id !== id);
     });
-  }
-
-  loadUser(id: number): void {
-    this.userService.getUserById(id).subscribe(
-      (user) => {
-        this.userForm.patchValue(user);
-      },
-      (error) => console.error('Error loading user:', error)
-    );
-  }
-
-  onSubmit(): void {
-    if (this.userForm.valid) {
-      const user: User = this.userForm.value;
-      if (this.isEditMode) {
-        this.userService.updateUser(this.userId, user).subscribe(
-          () => this.router.navigate(['/users']),
-          (error) => console.error('Error updating user:', error)
-        );
-      } else {
-        this.userService.createUser(user).subscribe(
-          () => this.router.navigate(['/users']),
-          (error) => console.error('Error creating user:', error)
-        );
-      }
-    }
-  }
-  cancel(): void {
-    if (this.userForm.dirty) {
-      if (confirm('Are you sure you want to cancel? Any unsaved changes will be lost.')) {
-        this.router.navigate(['/users']);
-      }
-    } else {
-      this.router.navigate(['/users']);
-    }
   }
 }
+
+// login.component.ts
+@Component({
+  selector: 'app-login',
+  templateUrl: './login.component.html',
+  styleUrls: ['./login.component.css']
+})
+export class LoginComponent {
+  login: string;
+  password: string;
+
+  constructor(private authService: AuthService, private router: Router) {}
+
+  onSubmit() {
+    this.authService.login(this.login, this.password).subscribe(
+      (token) => {
+        // Salvar o token no localStorage ou em um serviço de autenticação
+        this.router.navigate(['/users']);
+      },
+      (error) => {
+        // Exibir uma mensagem de erro para o usuário
+      }
+    );
+  }
+}
+Este é
+
+Regenerate Response
+
