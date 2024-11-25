@@ -12,6 +12,7 @@ import { CommonModule } from '@angular/common';
 
 })
 export class UserListComponent implements OnInit{
+[x: string]: any;
   users: User[] = [];
 
   constructor(private apiService: ApiService) {}
@@ -27,6 +28,17 @@ export class UserListComponent implements OnInit{
       },
       (error) => {
         console.error('Erro ao buscar usuários:', error);
+      }
+    );
+  }
+  updateUser(userId: number, updatedUserData: User) {
+    this.apiService.updateUser(userId, updatedUserData).subscribe(
+      (user) => {
+        const index = this.users.findIndex(u => u.id === userId);
+        this.users[index] = user;
+      },
+      (error) => {
+        console.error('Error updating user:', error);
       }
     );
   }

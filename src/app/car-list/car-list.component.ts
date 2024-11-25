@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { Car } from '../models/car';
 import { ApiService } from '../servico/api.service';
 import { CommonModule } from '@angular/common';
+import { CarService } from '../servico/car.service.spec';
 
 @Component({
   selector: 'app-car-list',
@@ -15,7 +16,7 @@ export class CarListComponent implements OnInit {
 
   cars: Car[] = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: CarService) { }
 
   ngOnInit(): void {
     this.getCars();

@@ -1,9 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ApiService,  } from '../servico/api.service';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router } from '@angular/router';
 import { User } from '../models/user';
-import { UserRole } from '../models/UserRole';
 
 
 @Component({
@@ -14,61 +12,66 @@ import { UserRole } from '../models/UserRole';
   styleUrl: './user-form.component.css'
 })
 export class UserFormComponent implements OnInit {
+  newUserForm : FormGroup;
   users: User[] = [];
 
-  constructor(private userService: ApiService) {}
+  constructor(private formBuilder: FormBuilder, private userService: ApiService) {}
 
   ngOnInit() {
-    this.getUsers();
+    this.initializeNewUserForm();
+    this.loadUsers();
   }
 
-  getUsers() {
-    this.userService.getUsers().subscribe((users) => (this.users = users));
-  }
-
-  createUser(user: User) {
-    this.userService.createUser(user).subscribe((newUser) => this.users.push(newUser));
-  }
-
-  updateUser(id: number, user: User) {
-    this.userService.updateUser(id, user).subscribe((updatedUser) => {
-      const index = this.users.findIndex((u) => u.id === id);
-      this.users[index] = updatedUser;
+  initializeNewUserForm() {
+    this.newUserForm = this.formBuilder.group({
+      firstName: ['', Validators.required],
+      lastName: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      birthday: ['', Validators.required],
+      login: ['', Validators.required],
+      password: ['', Validators.required],
+      phone: ['', Validators.required]
     });
   }
 
-  deleteUser(id: number) {
-    this.userService.deleteUser(id).subscribe(() => {
-      this.users = this.users.filter((u) => u.id !== id);
+  loadUsers() {
+    this.userService.getUsers().subscribe(users => {
+      this.users = users;
     });
   }
-}
 
-// login.component.ts
-@Component({
-  selector: 'app-login',
-  templateUrl: './login.component.html',
-  styleUrls: ['./login.component.css']
-})
-export class LoginComponent {
-  login: string;
-  password: string;
-
-  constructor(private authService: AuthService, private router: Router) {}
-
-  onSubmit() {
-    this.authService.login(this.login, this.password).subscribe(
-      (token) => {
-        // Salvar o token no localStorage ou em um serviço de autenticação
-        this.router.navigate(['/users']);
+  createUser(newUserData: User) {
+    this.userService.createUser(newUserData).subscribe(
+      (user) => {
+        this.users.push(user);
+        this.newUserForm.reset();
       },
       (error) => {
-        // Exibir uma mensagem de erro para o usuário
+        console.error('Error creating user:', error);
+      }
+    );
+  }
+
+  updateUser(userId: number, updatedUserData: User) {
+    this.userService.updateUser(userId, updatedUserData).subscribe(
+      (user) => {
+        const index = this.users.findIndex(u => u.id === userId);
+        this.users[index] = user;
+      },
+      (error) => {
+        console.error('Error updating user:', error);
+      }
+    );
+  }
+
+  deleteUser(userId: number) {
+    this.userService.deleteUser(userId).subscribe(
+      () => {
+        this.users = this.users.filter(u => u.id !== userId);
+      },
+      (error) => {
+        console.error('Error deleting user:', error);
       }
     );
   }
 }
-Este é
-
-Regenerate Response
-

@@ -1,4 +1,5 @@
 export interface Car {
+[x: string]: any;
 
   id: number;
   year: number;

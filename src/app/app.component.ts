@@ -3,11 +3,12 @@ import { RouterOutlet } from '@angular/router';
 import { HeaderComponent } from "./header/header.component";
 import { CarListComponent } from "./car-list/car-list.component";
 import { UserListComponent } from "./user-list/user-list.component";
+import { UserFormComponent } from "./user-form/user-form.component";
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [RouterOutlet, HeaderComponent, CarListComponent, UserListComponent],
+  imports: [RouterOutlet, HeaderComponent, CarListComponent, UserListComponent, UserFormComponent],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css'
 })
